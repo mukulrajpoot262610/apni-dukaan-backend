@@ -4,11 +4,9 @@ module.exports = async function (req, res, next) {
 
     try {
         const { dukaanAccessCookie } = req.cookies
-        console.log(dukaanAccessCookie)
         if (!dukaanAccessCookie) {
             throw new Error()
         }
-
 
         const userData = await tokenService.verifyAccessToken(dukaanAccessCookie)
 
