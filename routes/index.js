@@ -2,7 +2,8 @@ const router = require('express').Router()
 const authController = require('../controllers/auth-controller');
 const userController = require('../controllers/user-controller');
 const authMiddleware = require('../middleware/auth-middleware')
-const productController = require('../controllers/product-controller')
+const productController = require('../controllers/product-controller');
+const orderController = require('../controllers/order-controller');
 
 // AUTH
 router.post('/api/send-otp', authController.sendOtp)
@@ -19,8 +20,14 @@ router.post('/api/add-category', authMiddleware, userController.addCategory)
 router.post('/api/add-product', authMiddleware, productController.addProduct)
 router.get('/api/get-all-product', authMiddleware, productController.getAllProducts)
 
-// TEMPLTE
+// TEMPALTE
 router.post('/api/get-store', userController.getBusinessDetails)
 router.post('/api/get-products', userController.getBusinessProducts)
+router.post('/api/add-address', userController.updateAddress)
+router.post('/api/place-order', orderController.placeOrder)
+
+// TEMPALTE AUTH
+router.post('/api/register', authController.registerUser)
+router.post('/api/login', authController.loginUser)
 
 module.exports = router;

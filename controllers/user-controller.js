@@ -84,6 +84,32 @@ class UserController {
 
     }
 
+    async updateAddress(req, res) {
+        const { pincode, city, landmark, street, storeLink, email } = req.body;
+
+        if (!pincode || !city || !landmark || !street || !storeLink || !email) {
+            return res.status(400).json({ msg: 'All Fields are required' })
+        }
+
+        try {
+            let user = await userService.findEndUser({ email, storeLink })
+
+            if (!user) {
+                return res.status(400).json({ msg: 'User not found' })
+            }
+
+            const address = { street, landmark, city, pincode }
+
+            user.address.push(address)
+            user.save()
+            res.status(200).json({ user })
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: "Internal Server Error" })
+        }
+    }
+
 
 }
 

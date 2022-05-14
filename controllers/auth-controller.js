@@ -196,6 +196,63 @@ class AuthController {
         res.clearCookie('dukaanAccessCookie')
         res.json({ user: null, auth: false })
     }
+
+    async registerUser(req, res) {
+        const { name, email, password, storeLink } = req.body;
+
+        if (!name || !password || !email || !storeLink) {
+            return res.status(400).json({ msg: 'All Fields are required' })
+        }
+
+        try {
+
+            let user = await userService.findEndUser({ email, storeLink })
+
+            if (user) {
+                return res.status(400).json({ msg: 'User Already Exist' })
+            }
+
+            const shop = await userService.findUser({ storeLink })
+
+            if (!shop) {
+                return res.status(404).json({ msg: 'Store Not Found' })
+            } else {
+                user = await userService.createEndUser({ name, email, password, storeLink })
+                return res.status(200).json({ msg: 'Registration Successfull', user })
+            }
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
+
+    async loginUser(req, res) {
+        const { email, password, storeLink } = req.body;
+
+        if (!password || !email || !storeLink) {
+            return res.status(400).json({ msg: 'All Fields are required' })
+        }
+
+        try {
+
+            let user = await userService.findEndUser({ email, storeLink })
+
+            if (!user) {
+                return res.status(400).json({ msg: 'User not found' })
+            }
+
+            if (user.password !== password) {
+                return res.status(400).json({ msg: 'Invalid Credentials' })
+            }
+
+            return res.status(200).json({ msg: 'Login Successfull', user })
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
 }
 
 module.exports = new AuthController();

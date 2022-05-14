@@ -2,15 +2,14 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: false },
-    email: { type: String, required: true },
+    email: { type: String },
     name: { type: String },
-    gender: { type: String },
+    password: { type: String },
+    storeLink: { type: String },
     address: [
         {
             street: { type: String },
             landmark: { type: String },
-            country: { type: String },
-            state: { type: String },
             city: { type: String },
             pincode: { type: String },
         }
