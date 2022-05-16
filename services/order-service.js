@@ -22,7 +22,7 @@ class OrderService {
 
     async getOrder(id) {
         try {
-            const order = await orderModal.findById(id).populate('userId')
+            const order = await orderModal.findById(id)
             return order
         } catch (err) {
             console.log(err)

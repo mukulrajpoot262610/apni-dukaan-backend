@@ -2,12 +2,14 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    storeLink: { type: String },
     orderItems: [
         {
             product: {
                 _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
                 name: { type: String },
                 discountedPrice: { type: String },
+                image: [{ type: String }],
             },
             qty: { type: Number, default: 1 },
         }

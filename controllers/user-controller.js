@@ -2,6 +2,7 @@ const userService = require("../services/user-service")
 const slugify = require('slugify');
 const mongoose = require('mongoose')
 const productService = require("../services/product-service");
+const userModal = require("../models/user-modal");
 
 class UserController {
 
@@ -26,6 +27,30 @@ class UserController {
             user.storeLink = slugify(businessName, {
                 lower: true,
             })
+
+            await user.save()
+
+            res.status(200).json({ user })
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
+
+    async updateThemeDetails(req, res) {
+
+        const { storeDesc, emailSupport, phoneSupport, deliveryCharges, deliveryTiming, image } = req.body;
+        const userId = req.user._id
+
+        try {
+            const user = await userService.findUser({ _id: userId })
+
+            user.description = storeDesc
+            user.supportEmail = emailSupport
+            user.supportPhone = phoneSupport
+            user.deliveryCharges = deliveryCharges
+            user.deliveryTiming = deliveryTiming
+            user.banner = image
 
             await user.save()
 
@@ -107,6 +132,20 @@ class UserController {
         } catch (err) {
             console.log(err)
             res.status(500).json({ msg: "Internal Server Error" })
+        }
+    }
+
+    async getAllUsers(req, res) {
+
+        const userId = req.user._id
+
+        try {
+            const user = await userService.findUser({ _id: userId })
+            const storeLink = user.storeLink;
+            const users = await userModal.find({ storeLink })
+            return res.status(200).json({ users })
+        } catch (err) {
+            return res.status(500).json({ msg: 'Internal Server Error' })
         }
     }
 

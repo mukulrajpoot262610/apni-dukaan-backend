@@ -14,11 +14,20 @@ router.post('/api/logout', authMiddleware, authController.logout)
 
 // UPDATE
 router.post('/api/update-business-details', authMiddleware, userController.updateBusinessDetails)
+router.post('/api/update-theme-details', authMiddleware, userController.updateThemeDetails)
 router.post('/api/add-category', authMiddleware, userController.addCategory)
 
 // PRODUCTS
 router.post('/api/add-product', authMiddleware, productController.addProduct)
 router.get('/api/get-all-product', authMiddleware, productController.getAllProducts)
+
+//ORDERS
+router.get('/api/get-all-orders', authMiddleware, orderController.getAllOrders)
+router.post('/api/get-order-detail', authMiddleware, orderController.getOrderDetail)
+router.post('/api/get-user-orders', orderController.getUserOrders)
+
+//CUSTOMERS
+router.get('/api/get-all-users', authMiddleware, userController.getAllUsers)
 
 // TEMPALTE
 router.post('/api/get-store', userController.getBusinessDetails)

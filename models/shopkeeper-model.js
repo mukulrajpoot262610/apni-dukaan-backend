@@ -12,7 +12,13 @@ const shopkeeperSchema = new mongoose.Schema({
         {
             type: String
         }
-    ]
+    ],
+    banner: { type: String },
+    description: { type: String },
+    supportEmail: { type: String },
+    supportPhone: { type: String },
+    deliveryCharges: { type: Number, default: 40 },
+    deliveryTiming: { type: String },
 },
     { timestamps: true }
 )

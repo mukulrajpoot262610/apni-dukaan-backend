@@ -2,7 +2,8 @@ const userService = require("../services/user-service")
 const slugify = require('slugify');
 const mongoose = require('mongoose')
 const productService = require("../services/product-service");
-const orderService = require('../services/order-service')
+const orderService = require('../services/order-service');
+const orderModal = require("../models/order-modal");
 
 class OrderController {
 
@@ -25,11 +26,9 @@ class OrderController {
                 shippingAddress,
                 paymentMethod,
                 totalPrice,
-                userId: user._id
+                userId: user._id,
+                storeLink,
             })
-
-            user.orders = [order._id, ...user.orders]
-            await user.save()
 
             res.status(200).json({ order, user })
 
@@ -39,6 +38,53 @@ class OrderController {
         }
     }
 
+    async getAllOrders(req, res) {
+
+        const userId = req.user._id
+
+        try {
+            const user = await userService.findUser({ _id: userId })
+            const storeLink = user.storeLink;
+            const orders = await orderModal.find({ storeLink })
+            return res.status(200).json({ orders })
+        } catch (err) {
+            return res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
+
+    async getOrderDetail(req, res) {
+
+        const { id } = req.body
+
+        try {
+            const userId = req.user._id
+            const user = await userService.findUser({ _id: userId })
+
+            if (!user) {
+                return res.status(404).json({ msg: "User not found" })
+            }
+
+            const order = await orderService.getOrder(id)
+            res.status(200).json({ order })
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: 'Internal Server Error' })
+        }
+
+    }
+
+    async getUserOrders(req, res) {
+
+        const { userId, storeLink } = req.body;
+
+        try {
+            const orders = await orderModal.find({ storeLink, userId })
+            return res.status(200).json({ orders })
+        } catch (err) {
+            return res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
 
 }
 
