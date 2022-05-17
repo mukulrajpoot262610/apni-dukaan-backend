@@ -25,6 +25,7 @@ router.get('/api/get-all-product', authMiddleware, productController.getAllProdu
 router.get('/api/get-all-orders', authMiddleware, orderController.getAllOrders)
 router.post('/api/get-order-detail', authMiddleware, orderController.getOrderDetail)
 router.post('/api/get-user-orders', orderController.getUserOrders)
+router.get('/api/get-stats', authMiddleware, userController.getStats)
 
 //CUSTOMERS
 router.get('/api/get-all-users', authMiddleware, userController.getAllUsers)

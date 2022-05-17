@@ -3,6 +3,7 @@ const slugify = require('slugify');
 const mongoose = require('mongoose')
 const productService = require("../services/product-service");
 const userModal = require("../models/user-modal");
+const orderService = require('../services/order-service')
 
 class UserController {
 
@@ -146,6 +147,32 @@ class UserController {
             return res.status(200).json({ users })
         } catch (err) {
             return res.status(500).json({ msg: 'Internal Server Error' })
+        }
+    }
+
+    async getStats(req, res) {
+        try {
+            const userId = req.user._id
+            const user = await userService.findUser({ _id: userId })
+
+            if (!user) {
+                return res.status(404).json({ msg: "User not found" })
+            }
+
+            const orders = await orderService.getAllOrder({ storeLink: user.storeLink })
+            const users = await userService.getAllEndUser({ storeLink: user.storeLink })
+
+            const sales = await orders.map((e) => e.totalPrice).reduce((a, b) => a + b, 0)
+
+            res.status(200).json({
+                totalSales: sales,
+                totalUsers: users.length,
+                totalOrders: orders.length,
+            })
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ msg: 'Internal Server Error' })
         }
     }
 

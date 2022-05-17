@@ -22,7 +22,16 @@ class UserService {
     }
 
     async findEndUser(filter) {
-        const user = await UserModel.findOne(filter)
+        try {
+            const users = await UserModel.findOne(filter)
+            return users
+        } catch (err) {
+            return err
+        }
+    }
+
+    async getAllEndUser(filter) {
+        const user = await UserModel.find(filter)
         return user
     }
 

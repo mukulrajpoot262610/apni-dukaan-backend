@@ -11,9 +11,9 @@ class OrderService {
         }
     }
 
-    async getAllOrder() {
+    async getAllOrder(filter) {
         try {
-            const orders = await orderModal.find()
+            const orders = await orderModal.find(filter)
             return orders
         } catch (err) {
             console.log(err)
